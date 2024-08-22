@@ -24,30 +24,29 @@ const Dealer = () => {
   let reviews_url = root_url+`djangoapp/reviews/dealer/${id}`;
   let post_review = root_url+`postreview/${id}`;
   
-  const get_dealer = async ()=>{
-    const res = await fetch(dealer_url, {
-      method: "GET"
-    });
-    const retobj = await res.json();
-    
-    if(retobj.status === 200) {
-      let dealerobjs = Array.from(retobj.dealer)
-      setDealer(dealerobjs[0])
+  const get_dealer = async () => {
+    try {
+      const res = await fetch(dealer_url);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const retobj = await res.json();
+      setDealer(retobj.dealer);
+    } catch (error) {
+      console.error("Failed to fetch dealer data:", error);
     }
-  }
+  };
 
-  const get_reviews = async ()=>{
-    const res = await fetch(reviews_url, {
-      method: "GET"
-    });
-    const retobj = await res.json();
-    
-    if(retobj.status === 200) {
-      if(retobj.reviews.length > 0){
-        setReviews(retobj.reviews)
+  const get_reviews = async () => {
+    try {
+      const res = await fetch(reviews_url);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const retobj = await res.json();
+      if (retobj.reviews.length > 0) {
+        setReviews(retobj.reviews);
       } else {
         setUnreviewed(true);
       }
+    } catch (error) {
+      console.error("Failed to fetch reviews data:", error);
     }
   }
 
